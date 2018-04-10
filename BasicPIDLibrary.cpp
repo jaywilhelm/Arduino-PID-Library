@@ -55,7 +55,8 @@ bool BasicPIDLibrary::Compute(DECIMAL iSetpoint,DECIMAL iInput,DECIMAL *pOutput)
 			*pOutput = mOutMax;
 		else if(output < mOutMin) 
 			*pOutput = mOutMin;
-
+		else
+			*pOutput = output;
 		//Remember some variables for next time 
 		mLastInput = iInput;
 		mLastTime = now;
