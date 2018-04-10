@@ -55,7 +55,9 @@ bool BasicPIDLibrary::Compute(DECIMAL iSetpoint,DECIMAL iInput,DECIMAL *pOutput)
 			*pOutput = mOutMax;
 		else if(output < mOutMin) 
 			*pOutput = mOutMin;
-
+		else{
+			*pOutput = output;					//pointer to output when output is within limits
+		}
 		//Remember some variables for next time 
 		mLastInput = iInput;
 		mLastTime = now;
@@ -117,5 +119,4 @@ void BasicPIDLibrary::EnableController(void)
 	mLastInput = 0.0;
 	mLastTime = 0;
 }
-
 

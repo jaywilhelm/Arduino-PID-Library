@@ -10,26 +10,26 @@
 
 //Define Variables we'll be connecting to
 double Setpoint, Input, Output;
+double *output_pointer = &Output;
 
 //Specify the links and initial tuning parameters
 double Kp=2, Ki=5, Kd=1;
-PID myPID(&Input, &Output, &Setpoint, Kp, Ki, Kd, DIRECT);
+BasicPIDLibrary myPID(Kp, Ki, Kd);
 
 void setup()
 {
+  Serial.begin(115200);
   //initialize the variables we're linked to
   Input = analogRead(PIN_INPUT);
   Setpoint = 100;
+  myPID.SetOutputLimits(-1000,1000);
 
-  //turn the PID on
-  myPID.SetMode(AUTOMATIC);
 }
 
 void loop()
 {
   Input = analogRead(PIN_INPUT);
-  myPID.Compute();
+
+  myPID.Compute(Setpoint, Input, output_pointer);
   analogWrite(PIN_OUTPUT, Output);
 }
-
-
