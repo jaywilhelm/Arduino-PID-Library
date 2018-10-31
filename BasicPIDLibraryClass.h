@@ -12,7 +12,7 @@ class BasicPIDLibrary
 	//commonly used functions **************************************************************************
 	BasicPIDLibrary(DECIMAL Kp, DECIMAL Ki, DECIMAL Kd);
 
-    bool Compute(DECIMAL, DECIMAL,DECIMAL*);                    // * performs the PID calculation.  it should be
+    bool Compute(DECIMAL, DECIMAL,DECIMAL&);                    // * performs the PID calculation.  it should be
                                           //   called every time loop() cycles. 
 
     void SetOutputLimits(DECIMAL, DECIMAL); // * clamps the output to a specific range. 0-255 by default, but
