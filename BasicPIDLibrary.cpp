@@ -58,6 +58,7 @@ bool BasicPIDLibrary::Compute(DECIMAL iSetpoint,DECIMAL iInput,DECIMAL *pOutput)
 		else{
 			*pOutput = output;					//pointer to output when output is within limits
 		}
+
 		//Remember some variables for next time 
 		mLastInput = iInput;
 		mLastTime = now;
