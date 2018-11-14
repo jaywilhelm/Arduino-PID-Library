@@ -45,7 +45,7 @@ bool BasicPIDLibrary::Compute(DECIMAL iSetpoint,DECIMAL iInput,DECIMAL &pOutput)
 	if(timeChange >= mSampleTime)
 	{	
 		DECIMAL error = iSetpoint - iInput;
-		DECIMAL dInput = (iInput - mLastInput);
+		DECIMAL dInput = (error - mLastInput);
 		mOutputSum += error;
 
 		DECIMAL output;
@@ -60,7 +60,7 @@ bool BasicPIDLibrary::Compute(DECIMAL iSetpoint,DECIMAL iInput,DECIMAL &pOutput)
 		}
 
 		//Remember some variables for next time 
-		mLastInput = iInput;
+		mLastInput = error;
 		mLastTime = now;
 		return true;
 	}
