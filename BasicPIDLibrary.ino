@@ -10,7 +10,7 @@ double Kp=1.0, Ki=0.001, Kd=0.001;
 BasicPIDLibrary myPID(Kp, Ki, Kd);
 void setup()
 {
-  myPID.SetOutputLimits(-1,1);
+  myPID.SetOutputLimits(0,255);
   myPID.SetSampleTime(100);
 }
 void loop()

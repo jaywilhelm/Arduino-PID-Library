@@ -17,14 +17,14 @@
  ***************************************************************************/
 BasicPIDLibrary::BasicPIDLibrary(double Kp, double Ki, double Kd)
 {
-    BasicPIDLibrary::SetOutputLimits(0, 255);				//default output limit corresponds to
+    BasicPIDLibrary::SetOutputLimits(0, 255);	//default output limit corresponds to
 												//the arduino pwm limits
 
-    mSampleTime = 50;							//default Controller Sample Time is 0.1 seconds
+    this->mSampleTime = 50;							//default Controller Sample Time is 0.1 seconds
 
     BasicPIDLibrary::SetTunings(Kp, Ki, Kd);
 
-    mLastTime = millis()-mSampleTime;
+    this->mLastTime = millis()-mSampleTime;
 	
 	EnableController();
 }
@@ -38,15 +38,15 @@ BasicPIDLibrary::BasicPIDLibrary(double Kp, double Ki, double Kd)
  **********************************************************************************/
 bool BasicPIDLibrary::Compute(DECIMAL iSetpoint,DECIMAL iInput,DECIMAL &pOutput)
 {
-	if(!mEnabled)
+	if(!this->mEnabled)
 		return false;
 	unsigned long now = millis();
 	unsigned long timeChange = (now - mLastTime);
-	if(timeChange >= mSampleTime)
+	if(timeChange >= this->mSampleTime) //only run at a set controller sample rate
 	{	
 		DECIMAL error = iSetpoint - iInput;
 		DECIMAL dInput = (error - mLastInput);
-		mOutputSum += error;
+		this->mOutputSum += error;
 
 		DECIMAL output;
 		output = (kp * error) +  (mOutputSum * ki) + (dInput * kd); //dt assumed in ki and kd
@@ -56,12 +56,12 @@ bool BasicPIDLibrary::Compute(DECIMAL iSetpoint,DECIMAL iInput,DECIMAL &pOutput)
 		else if(output < mOutMin) 
 			pOutput = mOutMin;
 		else{
-			pOutput = output;					//pointer to output when output is within limits
+			pOutput = output;	//assign output value to the pointer
 		}
 
 		//Remember some variables for next time 
-		mLastInput = error;
-		mLastTime = now;
+		this->mLastInput = error;
+		this->mLastTime = now;
 		return true;
 	}
 	else 
@@ -73,9 +73,9 @@ bool BasicPIDLibrary::Compute(DECIMAL iSetpoint,DECIMAL iInput,DECIMAL &pOutput)
  * Set Tunings using the last-rembered POn setting
  ******************************************************************************/
 void BasicPIDLibrary::SetTunings(DECIMAL iKp, DECIMAL iKi, DECIMAL iKd){
-   kp = iKp;
-   ki = iKi * (DECIMAL)mSampleTime/1000.0;
-   kd = iKd / (DECIMAL)mSampleTime/1000.0;
+   this->kp = iKp;
+   this->ki = iKi * (DECIMAL)this->mSampleTime/1000.0;
+   this->kd = iKd / (DECIMAL)this->mSampleTime/1000.0;
 }
 
 /* SetSampleTime(...) *********************************************************
@@ -85,12 +85,12 @@ void BasicPIDLibrary::SetSampleTime(int NewSampleTime)
 {
    if (NewSampleTime > 0)
    {
-      //need ratio to keep relative to seconds?
+      //need ratio to keep relative to seconds
 	  DECIMAL ratio  = (DECIMAL)NewSampleTime
-                      / (DECIMAL)mSampleTime;
-      ki *= ratio;
-      kd /= ratio;
-      mSampleTime = (unsigned long)NewSampleTime;
+                      / (DECIMAL)this->mSampleTime;
+      this->ki *= ratio;
+      this->kd /= ratio;
+      this->mSampleTime = (unsigned long)NewSampleTime;
    }
 }
 
@@ -104,19 +104,20 @@ void BasicPIDLibrary::SetSampleTime(int NewSampleTime)
  **************************************************************************/
 void BasicPIDLibrary::SetOutputLimits(DECIMAL Min, DECIMAL Max)
 {
-   if(Min >= Max) return;
-   mOutMin = Min;
-   mOutMax = Max;
+   if(Min >= Max) 
+	   return;
+   this->mOutMin = Min;
+   this->mOutMax = Max;
 }
 
 void BasicPIDLibrary::DisableController(void)
 {
-	mEnabled = false;
+	this->mEnabled = false;
 }
 void BasicPIDLibrary::EnableController(void)
 {
-	mEnabled = true;
-	mOutputSum = 0.0;
-	mLastInput = 0.0;
-	mLastTime = 0;
+	this->mEnabled = true;
+	this->mOutputSum = 0.0;
+	this->mLastInput = 0.0;
+	this->mLastTime = 0;
 }
