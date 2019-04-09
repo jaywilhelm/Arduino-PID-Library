@@ -1,6 +1,6 @@
 /********************************************************
  * PID Basic Example
- * Jay Wilhelm, jwilhelm@ohio.edu, 2018
+ * Jay Wilhelm, jwilhelm@ohio.edu, 2019
  ********************************************************/
 #include "BasicPIDLibraryClass.h"
 #define PIN_INPUT 0
