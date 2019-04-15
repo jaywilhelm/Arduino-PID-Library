@@ -52,11 +52,10 @@ class BasicPIDLibrary
 			  
 	unsigned long mLastTime;
 	DECIMAL mOutputSum;
-	DECIMAL	mLastInput;
+	DECIMAL	mLastError;
 
 	unsigned long mSampleTime;
 	DECIMAL mOutMax;
 	DECIMAL	mOutMin;
 };
 #endif
-
