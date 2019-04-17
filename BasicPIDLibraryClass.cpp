@@ -42,7 +42,7 @@ bool BasicPIDLibrary::Compute(DECIMAL iSetpoint,DECIMAL iInput,DECIMAL &pOutput)
 	{	
 		DECIMAL error = iSetpoint - iInput;
 		DECIMAL dInput = (error - mLastError) / (this->mSampleTime/1000.0);
-		this->mOutputSum += error*(this->mSampleTime/1000.0);
+		this->mOutputSum += (error-mLastError)*(this->mSampleTime/1000.0);
 
 		DECIMAL output;
 		output = (kp * error) +  (this->mOutputSum * ki) + (dInput * kd); //dt assumed in ki and kd
