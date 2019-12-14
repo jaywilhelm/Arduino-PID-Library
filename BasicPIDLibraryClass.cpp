@@ -41,8 +41,8 @@ bool BasicPIDLibrary::Compute(DECIMAL iSetpoint,DECIMAL iInput,DECIMAL &pOutput)
 	if(timeChange >= this->mSampleTime) //only run at a set controller sample rate
 	{	
 		DECIMAL error = iSetpoint - iInput;
-		DECIMAL dInput = (error - mLastError) / (this->mSampleTime/1000.0);
-		this->mOutputSum += (error-mLastError)*(this->mSampleTime/1000.0);
+		DECIMAL dInput = (error - mLastInput) / (this->mSampleTime/1000.0);
+		this->mOutputSum += (error- mLastInput)*(this->mSampleTime/1000.0);
 
 		DECIMAL output;
 		output = (kp * error) +  (this->mOutputSum * ki) + (dInput * kd); //dt assumed in ki and kd
@@ -56,7 +56,7 @@ bool BasicPIDLibrary::Compute(DECIMAL iSetpoint,DECIMAL iInput,DECIMAL &pOutput)
 		}
 
 		//Remember some variables for next time 
-		this->mLastError = error;
+		this->mLastInput = error;
 		this->mLastTime = now;
 		return true;
 	}
@@ -114,6 +114,6 @@ void BasicPIDLibrary::EnableController(void)
 {
 	this->mEnabled = true;
 	this->mOutputSum = 0.0;
-	this->mLastError = 0.0;
+	this->mLastInput = 0.0;
 	this->mLastTime = 0;
 }
