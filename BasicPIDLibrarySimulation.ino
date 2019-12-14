@@ -25,6 +25,8 @@ void loop()
   myPID.Compute(gSetpoint, dInput, dOutput);
   double t = millis() / 1000.0;
   double dt = 1.0/tdelay;
+  //THIS IS SIMULTION ONLY
+  //DO NOT USE
   simsys = simsys + dOutput*exp(-dOutput)*dt;
   /*Serial.print(t);
   Serial.print("\t");
