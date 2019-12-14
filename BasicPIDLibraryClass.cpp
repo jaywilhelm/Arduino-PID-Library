@@ -19,14 +19,10 @@ BasicPIDLibrary::BasicPIDLibrary(double Kp, double Ki, double Kd)
 {
     BasicPIDLibrary::SetOutputLimits(0, 255);	//default output limit corresponds to
 												//the arduino pwm limits
-
     this->mSampleTime = 50;							//default Controller Sample Time is 0.1 seconds
-
     BasicPIDLibrary::SetTunings(Kp, Ki, Kd);
-
     this->mLastTime = millis()-mSampleTime;
-	
-	EnableController();
+	  EnableController();
 }
 
 
@@ -45,11 +41,11 @@ bool BasicPIDLibrary::Compute(DECIMAL iSetpoint,DECIMAL iInput,DECIMAL &pOutput)
 	if(timeChange >= this->mSampleTime) //only run at a set controller sample rate
 	{	
 		DECIMAL error = iSetpoint - iInput;
-		DECIMAL dInput = (error - mLastInput);
-		this->mOutputSum += error;
+		DECIMAL dInput = (error - mLastError) / (this->mSampleTime/1000.0);
+		this->mOutputSum += (error-mLastError)*(this->mSampleTime/1000.0);
 
 		DECIMAL output;
-		output = (kp * error) +  (mOutputSum * ki) + (dInput * kd); //dt assumed in ki and kd
+		output = (kp * error) +  (this->mOutputSum * ki) + (dInput * kd); //dt assumed in ki and kd
 
 		if(output > mOutMax) 
 			pOutput = mOutMax;
@@ -60,7 +56,7 @@ bool BasicPIDLibrary::Compute(DECIMAL iSetpoint,DECIMAL iInput,DECIMAL &pOutput)
 		}
 
 		//Remember some variables for next time 
-		this->mLastInput = error;
+		this->mLastError = error;
 		this->mLastTime = now;
 		return true;
 	}
@@ -74,8 +70,8 @@ bool BasicPIDLibrary::Compute(DECIMAL iSetpoint,DECIMAL iInput,DECIMAL &pOutput)
  ******************************************************************************/
 void BasicPIDLibrary::SetTunings(DECIMAL iKp, DECIMAL iKi, DECIMAL iKd){
    this->kp = iKp;
-   this->ki = iKi * (DECIMAL)this->mSampleTime/1000.0;
-   this->kd = iKd / (DECIMAL)this->mSampleTime/1000.0;
+   this->ki = iKi;// * (DECIMAL)this->mSampleTime/1000.0;
+   this->kd = iKd;// / (DECIMAL)this->mSampleTime/1000.0;
 }
 
 /* SetSampleTime(...) *********************************************************
@@ -86,10 +82,10 @@ void BasicPIDLibrary::SetSampleTime(int NewSampleTime)
    if (NewSampleTime > 0)
    {
       //need ratio to keep relative to seconds
-	  DECIMAL ratio  = (DECIMAL)NewSampleTime
+	    /*DECIMAL ratio  = (DECIMAL)NewSampleTime
                       / (DECIMAL)this->mSampleTime;
       this->ki *= ratio;
-      this->kd /= ratio;
+      this->kd /= ratio;*/
       this->mSampleTime = (unsigned long)NewSampleTime;
    }
 }
@@ -118,6 +114,6 @@ void BasicPIDLibrary::EnableController(void)
 {
 	this->mEnabled = true;
 	this->mOutputSum = 0.0;
-	this->mLastInput = 0.0;
+	this->mLastError = 0.0;
 	this->mLastTime = 0;
 }
