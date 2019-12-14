@@ -1,5 +1,5 @@
 /**********************************************************************************************
- * Basic PID Library - Version 0.1
+ * Basic PID Library - Version 1.0
  * by Jay Wilhelm <jwilhelm@ohio.edu>
  * original by Brett Beauregard <br3ttb@gmail.com> brettbeauregard.com
  *
